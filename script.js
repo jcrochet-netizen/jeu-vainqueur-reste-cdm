@@ -2,32 +2,35 @@
 //  Liste des joueurs — déduite depuis /france/*.jpg
 //  Tu peux modifier librement le "name" si tu veux ajuster.
 // ============================================================
+// Pour certains joueurs, le visage est plus haut dans la photo source : on
+// décale le cadrage avec `crop` (valeur CSS object-position) pour le ramener
+// au centre de la carte.
 const PLAYERS = [
-  { file: "abbes.jpg",     name: "Claude Abbès" },
+  { file: "abbes.jpg",     name: "Claude Abbès",        crop: "center 20%" },
   { file: "abidal.jpg",    name: "Éric Abidal" },
-  { file: "amoros.jpg",    name: "Manuel Amoros" },
-  { file: "barthez.jpg",   name: "Fabien Barthez" },
-  { file: "bats.jpg",      name: "Joël Bats" },
+  { file: "amoros.jpg",    name: "Manuel Amoros",       crop: "center 20%" },
+  { file: "barthez.jpg",   name: "Fabien Barthez",      crop: "center 20%" },
+  { file: "bats.jpg",      name: "Joël Bats",           crop: "center 20%" },
   { file: "battiston.jpg", name: "Patrick Battiston" },
   { file: "benzema.jpg",   name: "Karim Benzema" },
-  { file: "blanc.jpg",     name: "Laurent Blanc" },
+  { file: "blanc.jpg",     name: "Laurent Blanc",       crop: "center 20%" },
   { file: "bossis.jpg",    name: "Maxime Bossis" },
   { file: "desailly.jpg",  name: "Marcel Desailly" },
   { file: "deschamps.jpg", name: "Didier Deschamps" },
-  { file: "djorkaeff.jpg", name: "Youri Djorkaeff" },
+  { file: "djorkaeff.jpg", name: "Youri Djorkaeff",     crop: "center 20%" },
   { file: "ettori.jpg",    name: "Jean-Luc Ettori" },
   { file: "evra.jpg",      name: "Patrice Evra" },
   { file: "fernandez.jpg", name: "Luis Fernandez" },
-  { file: "fontaine.jpg",  name: "Just Fontaine" },
+  { file: "fontaine.jpg",  name: "Just Fontaine",       crop: "center 20%" },
   { file: "genghini.jpg",  name: "Bernard Genghini" },
-  { file: "giresse.jpg",   name: "Alain Giresse" },
+  { file: "giresse.jpg",   name: "Alain Giresse",       crop: "center 20%" },
   { file: "giroud.jpg",    name: "Olivier Giroud" },
   { file: "griezmann.jpg", name: "Antoine Griezmann" },
-  { file: "henry.jpg",     name: "Thierry Henry" },
+  { file: "henry.jpg",     name: "Thierry Henry",       crop: "center 20%" },
   { file: "janvion.jpg",   name: "Gérard Janvion" },
   { file: "kante.jpg",     name: "N'Golo Kanté" },
   { file: "kopa.jpg",      name: "Raymond Kopa" },
-  { file: "lizarazu.jpg",  name: "Bixente Lizarazu" },
+  { file: "lizarazu.jpg",  name: "Bixente Lizarazu",    crop: "center 20%" },
   { file: "lloris.jpg",    name: "Hugo Lloris" },
   { file: "maignan.jpg",   name: "Mike Maignan" },
   { file: "makelele.jpg",  name: "Claude Makélélé" },
@@ -140,10 +143,12 @@ function renderDuel() {
   // Le champion reste à gauche, le challenger à droite
   imgLeft.src = imgPath(state.champion);
   imgLeft.alt = state.champion.name;
+  imgLeft.style.objectPosition = state.champion.crop || "";
   nameLeft.textContent = state.champion.name;
 
   imgRight.src = imgPath(state.challenger);
   imgRight.alt = state.challenger.name;
+  imgRight.style.objectPosition = state.challenger.crop || "";
   nameRight.textContent = state.challenger.name;
 
   cardLeft.classList.remove("winner", "loser");
@@ -206,6 +211,7 @@ function showEnd() {
   endEl.classList.remove("hidden");
   $("champion-img").src = imgPath(state.champion);
   $("champion-img").alt = state.champion.name;
+  $("champion-img").style.objectPosition = state.champion.crop || "";
   $("champion-name").textContent = state.champion.name;
 
   // Filet de sécurité : s'assure que la dernière entrée (duel 44) est bien rendue
