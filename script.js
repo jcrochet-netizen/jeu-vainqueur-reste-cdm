@@ -92,10 +92,36 @@ function imgPath(p) {
   return `france/${p.file}`;
 }
 
+// Pré-charge toutes les photos en arrière-plan dès le démarrage.
+// Une fois en cache, les changements de challenger sont instantanés.
+const _imgCache = new Map();
+function preloadAll() {
+  PLAYERS.forEach((p) => {
+    if (_imgCache.has(p.file)) return;
+    const img = new Image();
+    img.decoding = "async";
+    img.src = imgPath(p);
+    _imgCache.set(p.file, img);
+  });
+}
+
+// Pré-charge spécifique : utile pour garantir que le prochain challenger
+// est prêt même si le pré-chargement initial n'a pas fini.
+function preloadOne(p) {
+  if (!p || _imgCache.has(p.file)) return;
+  const img = new Image();
+  img.decoding = "async";
+  img.src = imgPath(p);
+  _imgCache.set(p.file, img);
+}
+
 // ============================================================
 //  Démarrage / Reset
 // ============================================================
 function startGame() {
+  // Lance le préchargement de toutes les photos en arrière-plan
+  preloadAll();
+
   state.pool = shuffle(PLAYERS);
   state.champion = state.pool.shift();
   state.challenger = state.pool.shift();
@@ -149,6 +175,8 @@ function pick(side) {
     state.challenger = state.pool.shift();
     state.round += 1;
     renderDuel();
+    // Anticipe le prochain challenger (le suivant dans le pool)
+    preloadOne(state.pool[0]);
   }, 480);
 }
 
